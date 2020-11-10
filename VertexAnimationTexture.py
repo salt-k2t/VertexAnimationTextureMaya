@@ -27,7 +27,7 @@ class VertexAnimationTexture(MayaQWidgetBaseMixin, QtWidgets.QMainWindow):
 
     def _create_ui(self):
         self.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Maximum)
-        self.setFixedSize(QtCore.QSize(400, 210))
+        self.setFixedSize(QtCore.QSize(400, 240))
         self.root_widget = QtWidgets.QFrame(self)
         self.root_widget.setObjectName("root")
         self.setCentralWidget(self.root_widget)
@@ -77,6 +77,10 @@ class VertexAnimationTexture(MayaQWidgetBaseMixin, QtWidgets.QMainWindow):
         self.tex_file_select_dialog_button.clicked.connect(self.on_select_folder)
         tex_path_layout.addWidget(self.tex_file_select_dialog_button)
         gridLayout.addLayout(tex_path_layout, 7, 1)
+
+        self.update_button = QtWidgets.QPushButton("update")
+        self.update_button.clicked.connect(self.on_update_button_clicked)
+        main_layout.addWidget(self.update_button)
 
         self.execute_button = QtWidgets.QPushButton("execute")
         self.execute_button.setStyleSheet("background-color: darkCyan")
@@ -133,6 +137,10 @@ class VertexAnimationTexture(MayaQWidgetBaseMixin, QtWidgets.QMainWindow):
         self.execute_button.setEnabled(True)
         self.tex_file_path_line.setText(file_path)
 
+    def on_update_button_clicked(self):
+        self._initialize()
+        self._update()
+
     def on_execute_button_clicked(self):
         self._update()
 
@@ -161,7 +169,7 @@ class VertexAnimationTexture(MayaQWidgetBaseMixin, QtWidgets.QMainWindow):
             cmds.confirmDialog(t="Warning", m="out of range, down the detail")
 
     def create_data_img(self, v_size, u_size):
-        img = QtGui.QImage(v_size, u_size, QtGui.QImage.Format_RGBA64)
+        img = QtGui.QImage(v_size, u_size, QtGui.QImage.Format_ARGB32)
         img.fill(0)
         return img
 
