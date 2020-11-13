@@ -174,7 +174,8 @@ class VertexAnimationTexture(MayaQWidgetBaseMixin, QtWidgets.QMainWindow):
         return img
 
     def set_color(self, img, mesh, vertex_size, time, bias):
-        middle = 127.5
+        MaxSize = 65535
+        middle = MaxSize / 2.0
         out_of_range = False
         for v in range(vertex_size):
             if self.world_check_box.checkState() is QtCore.Qt.CheckState.Checked:
@@ -185,10 +186,11 @@ class VertexAnimationTexture(MayaQWidgetBaseMixin, QtWidgets.QMainWindow):
             r = pos[0] * bias + middle
             g = pos[1] * bias + middle
             b = pos[2] * bias + middle
-            img.setPixelColor(v, time, QtGui.QColor(r, g, b))
-            if (0 > r) or (r > 256) or (0 > g) or (g > 256) or (0 > b) or (b > 256):
+            img.setPixelColor(v, time, QtGui.QColor.fromRgba64(r, g, b, MaxSize))
+            if (0 > r) or (r > MaxSize) or (0 > g) or (g > MaxSize) or (0 > b) or (b > MaxSize):
                 out_of_range = True
         return out_of_range
+ui = VertexAnimationTexture()
 
-# def main():
-#     ui = VertexAnimationTexture()
+def main():
+    ui = VertexAnimationTexture()
