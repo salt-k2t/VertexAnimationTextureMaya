@@ -43,20 +43,17 @@ class VertexAnimationTexture(MayaQWidgetBaseMixin, QtWidgets.QMainWindow):
         gridLayout.addWidget(self.costume_menu, 0, 1)
         gridLayout.addWidget(QtWidgets.QLabel("square tex"), 1, 0)
         self.square_check_box = QtWidgets.QCheckBox()
+        self.square_check_box.setChecked(True)
         self.square_check_box.clicked.connect(self._update)
         gridLayout.addWidget(self.square_check_box, 1, 1)
-        gridLayout.addWidget(QtWidgets.QLabel("world"), 2, 0)
-        self.world_check_box = QtWidgets.QCheckBox()
-        self.world_check_box.clicked.connect(self._update)
-        gridLayout.addWidget(self.world_check_box, 2, 1)
         gridLayout.addWidget(QtWidgets.QLabel("detail"), 3, 0)
         detail_layout = QtWidgets.QHBoxLayout()
-        self.detail_label = QtWidgets.QLabel(str(10))
+        self.detail_label = QtWidgets.QLabel(str(1))
         detail_layout.addWidget(self.detail_label)
         self.detail_slider = QtWidgets.QSlider(QtCore.Qt.Horizontal, self)
-        self.detail_slider.setValue(10)
+        self.detail_slider.setValue(1)
         self.detail_slider.setMinimum(1)
-        self.detail_slider.setMaximum(100)
+        self.detail_slider.setMaximum(5)
         self.detail_slider.valueChanged.connect(self.on_change_detail_slider_value)
         detail_layout.addWidget(self.detail_slider)
         gridLayout.addLayout(detail_layout, 3, 1)
@@ -105,7 +102,7 @@ class VertexAnimationTexture(MayaQWidgetBaseMixin, QtWidgets.QMainWindow):
     def _update(self):
         self.start_time = cmds.playbackOptions(q=True, min=True)
         self.end_time = cmds.playbackOptions(q=True, max=True)
-        self.bake_time = self.end_time - self.start_time
+        self.bake_time = self.end_time - self.start_time + 1 # Including the last time
         self.time_label.setText(str(self.start_time) + " ~ " + str(self.end_time))
 
         if cmds.objExists(self.costume_menu.currentText()):
@@ -154,7 +151,7 @@ class VertexAnimationTexture(MayaQWidgetBaseMixin, QtWidgets.QMainWindow):
         img = self.create_data_img(self.vertex_size, self.bake_time)
 
         current_time = self.start_time
-        bias = self.detail_slider.value()
+        bias = 10 ** self.detail_slider.value()
         vertex_size = cmds.polyEvaluate(self.costume_menu.currentText(), v=True)
 
         out_of_range = False
@@ -178,19 +175,20 @@ class VertexAnimationTexture(MayaQWidgetBaseMixin, QtWidgets.QMainWindow):
         middle = MaxSize / 2.0
         out_of_range = False
         for v in range(vertex_size):
-            if self.world_check_box.checkState() is QtCore.Qt.CheckState.Checked:
-                pos = cmds.pointPosition(mesh + ".vtx[" + str(v) + "]", w=True)
-            else:
-                pos = cmds.pointPosition(mesh + ".vtx[" + str(v) + "]", l=True)
-
+            pos = cmds.pointPosition(mesh + ".vtx[" + str(v) + "]", l=True)
             r = pos[0] * bias + middle
             g = pos[1] * bias + middle
             b = pos[2] * bias + middle
-            img.setPixelColor(v, time, QtGui.QColor.fromRgba64(r, g, b, MaxSize))
-            if (0 > r) or (r > MaxSize) or (0 > g) or (g > MaxSize) or (0 > b) or (b > MaxSize):
+            if (0 > r) or (r > MaxSize):
                 out_of_range = True
+                r = max(min(r, MaxSize), 0)
+            if (0 > g) or (g > MaxSize):
+                out_of_range = True
+                g = max(min(g, MaxSize), 0)
+            if (0 > b) or (b > MaxSize):
+                out_of_range = True
+                b = max(min(b, MaxSize), 0)
+
+            img.setPixelColor(v, time, QtGui.QColor.fromRgba64(r, g, b, MaxSize))
         return out_of_range
 ui = VertexAnimationTexture()
-
-def main():
-    ui = VertexAnimationTexture()
