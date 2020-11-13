@@ -1,17 +1,14 @@
 # -*- coding: utf-8 -*-
-# from Qt import QtCore, QtGui, QtWidgets
 from PySide2 import QtCore, QtGui, QtWidgets
 from maya.app.general.mayaMixin import MayaQWidgetBaseMixin
 from maya import cmds
 
-try:
-    MAYA_WINDOW = QtCompat.wrapInstance(long(omui.MQtUtil.mainWindow()), QtWidgets.QWidget)
-except:
-    MAYA_WINDOW = None
+_MAX_SIZE_64 = 65535
+_MIDDLE_SIZE_64 = _MAX_SIZE_64 / 2.0
 
 
 class VertexAnimationTexture(MayaQWidgetBaseMixin, QtWidgets.QMainWindow):
-    def __init__(self, parent=MAYA_WINDOW):
+    def __init__(self, parent=None):
         super(VertexAnimationTexture, self).__init__(parent=parent)
         self.obj_name = self.__class__.__name__ + "_window"
 
@@ -90,7 +87,6 @@ class VertexAnimationTexture(MayaQWidgetBaseMixin, QtWidgets.QMainWindow):
         self._update()
 
     def _initialize(self):
-        # meshes = cmds.listRelatives(s=True)
         meshes = [x for x in cmds.ls(type="mesh")]
         if not meshes:
             return
@@ -102,7 +98,7 @@ class VertexAnimationTexture(MayaQWidgetBaseMixin, QtWidgets.QMainWindow):
     def _update(self):
         self.start_time = cmds.playbackOptions(q=True, min=True)
         self.end_time = cmds.playbackOptions(q=True, max=True)
-        self.bake_time = self.end_time - self.start_time + 1 # Including the last time
+        self.bake_time = self.end_time - self.start_time + 1  # Including the last time
         self.time_label.setText(str(self.start_time) + " ~ " + str(self.end_time))
 
         if cmds.objExists(self.costume_menu.currentText()):
@@ -145,7 +141,7 @@ class VertexAnimationTexture(MayaQWidgetBaseMixin, QtWidgets.QMainWindow):
             result = cmds.polyInfo(face, faceToVertex=True)[0].split(":")[1].split("    ")
             v_count = len(result) - 1
             if v_count >= 4:
-                cmds.confirmDialog(t="Warning", m="to Triangulate")
+                cmds.confirmDialog(t="Warning", m="Please Triangulate")
                 return
 
         img = self.create_data_img(self.vertex_size, self.bake_time)
@@ -163,32 +159,33 @@ class VertexAnimationTexture(MayaQWidgetBaseMixin, QtWidgets.QMainWindow):
         img.save(self.tex_file_path_line.text(), quality=100)
         cmds.currentTime(self.start_time)
         if out_of_range:
-            cmds.confirmDialog(t="Warning", m="out of range, down the detail")
+            cmds.confirmDialog(t="Warning", m="Out of range, down the detail")
 
     def create_data_img(self, v_size, u_size):
-        img = QtGui.QImage(v_size, u_size, QtGui.QImage.Format_ARGB32)
+        img = QtGui.QImage(v_size, u_size, QtGui.QImage.Format_ARGB32)  # Maya2019 can't use Format_RGBA64
         img.fill(0)
         return img
 
     def set_color(self, img, mesh, vertex_size, time, bias):
-        MaxSize = 65535
-        middle = MaxSize / 2.0
         out_of_range = False
         for v in range(vertex_size):
             pos = cmds.pointPosition(mesh + ".vtx[" + str(v) + "]", l=True)
-            r = pos[0] * bias + middle
-            g = pos[1] * bias + middle
-            b = pos[2] * bias + middle
-            if (0 > r) or (r > MaxSize):
+            r = pos[0] * bias + _MIDDLE_SIZE_64
+            g = pos[1] * bias + _MIDDLE_SIZE_64
+            b = pos[2] * bias + _MIDDLE_SIZE_64
+            if (0 > r) or (r > _MAX_SIZE_64):
                 out_of_range = True
-                r = max(min(r, MaxSize), 0)
-            if (0 > g) or (g > MaxSize):
+                r = max(min(r, _MAX_SIZE_64), 0)
+            if (0 > g) or (g > _MAX_SIZE_64):
                 out_of_range = True
-                g = max(min(g, MaxSize), 0)
-            if (0 > b) or (b > MaxSize):
+                g = max(min(g, _MAX_SIZE_64), 0)
+            if (0 > b) or (b > _MAX_SIZE_64):
                 out_of_range = True
-                b = max(min(b, MaxSize), 0)
+                b = max(min(b, _MAX_SIZE_64), 0)
 
-            img.setPixelColor(v, time, QtGui.QColor.fromRgba64(r, g, b, MaxSize))
+            img.setPixelColor(v, time, QtGui.QColor.fromRgba64(r, g, b, _MAX_SIZE_64))
         return out_of_range
+
+
+# Simple open from script editor
 ui = VertexAnimationTexture()

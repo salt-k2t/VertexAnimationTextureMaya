@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import sys
 import maya.OpenMayaMPx
 
@@ -12,7 +13,7 @@ class VatMain(maya.OpenMayaMPx.MPxCommand):
 
     def doIt(self, args):
         ui = Vat.VertexAnimationTexture()
-        
+
 
 def creator():
     return VatMain()
