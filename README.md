@@ -1,9 +1,9 @@
 # VertexAnimationTextureMaya
-頂点アニメーションをテクスチャにベイクするMayaプラグイン
+頂点アニメーションをテクスチャにベイクするMayaプラグインです。
 
 ## インストール
-1.Download後に解凍し、フォルダ名をVertexAnimationTextureMayaにします。("-master"を無くします)  
-2.Documents/Maya/Scriptsフォルダにフォルダ名をVertexAnimationTextureMayaを配置します。  
+1.Download後に解凍します。  
+2.Documents/Maya/Scriptsフォルダに解凍したフォルダを配置します。  
 3.Mayaを開き、スクリプトエディタにて以下のpythonコマンドを実行します。
 ```
 import maya.cmds as cmds
@@ -11,7 +11,8 @@ cmds.VatUnity()
 ```
 
 ## インストールせず使用する
-VertexAnimationTextureMaya.pyの内容を、スクリプトエディタにてpythonコマンドとして実行します。
+スクリプトエディタの ファイル→スクリプトを開く から、
+VertexAnimationTextureMaya.pyを選択し実行します。
 
 ## 使い方
 1.ドロップダウンメニューから、ベイクするMeshを選択します。  
@@ -20,7 +21,7 @@ VertexAnimationTextureMaya.pyの内容を、スクリプトエディタにてpyt
 4.出力先するテクスチャのパスを設定します。  
 5.Executeボタンよりベイクを実行します。
 
-### ベイク精度
+## ベイク精度
 detailスライダーにて適切なベイク精度を設定する必要があります。  
 精度が高すぎる場合はエラーのポップアップが表示されるので、精度を下げて再度実行してください。  
 精度が低すぎる場合はグレーに近い画像が出力されますので、精度を上げて再度実行してください。
@@ -31,5 +32,6 @@ detailスライダーにて適切なベイク精度を設定する必要があ�
 |-----------|------------|------------|
 | ![ベイク画像サンプル](./samples/texture/VatSampleHightDetailPopup.png) | ![ベイク画像サンプル](./samples/texture/VatSample.png) | ![ベイク画像低精度サンプル](./samples/texture/VatSampleLowDetail.png) |
 
-
-
+## 実行環境
+以下のリポジトリにサンプルを用意しています。  
+https://github.com/salt-k2t/VertexAnimationTextureUnity
