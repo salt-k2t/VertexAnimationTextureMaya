@@ -155,7 +155,7 @@ class VertexAnimationTexture(MayaQWidgetBaseMixin, QtWidgets.QMainWindow):
         vertex_size = cmds.polyEvaluate(self.costume_menu.currentText(), v=True)
 
         out_of_range = False
-        while (current_time < self.end_time):
+        while (current_time <= self.end_time):
             cmds.currentTime(current_time)
             if self._set_color(img, self.costume_menu.currentText(), vertex_size, current_time, bias):
                 out_of_range = True
