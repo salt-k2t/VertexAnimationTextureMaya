@@ -4,19 +4,19 @@ import maya.OpenMayaMPx
 
 import VertexAnimationTexture as Vat
 
-kPluginCmdName = 'VatMain'
+kPluginCmdName = 'VatUnity'
 
 
-class VatMain(maya.OpenMayaMPx.MPxCommand):
+class VatUnity(maya.OpenMayaMPx.MPxCommand):
     def __init__(self):
         maya.OpenMayaMPx.MPxCommand.__init__(self)
 
     def doIt(self, args):
-        ui = Vat.VertexAnimationTexture()
+        Vat.VertexAnimationTexture()
 
 
 def creator():
-    return VatMain()
+    return VatUnity()
 
 
 def initializePlugin(mObject):
