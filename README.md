@@ -7,12 +7,12 @@
 3.Mayaを開き、スクリプトエディタにて以下のpythonコマンドを実行します。
 ```
 import maya.cmds as cmds
-cmds.VatUnity()
+cmds.VertexAnimationTexture()
 ```
 
 ## インストールせず使用する
 スクリプトエディタの ファイル→スクリプトを開く から、
-VertexAnimationTextureMaya.pyを選択し実行します。
+VertexAnimationTextureMainWindow.pyを選択し実行します。
 
 ## 使い方
 1.ドロップダウンメニューから、ベイクするMeshを選択します。  
