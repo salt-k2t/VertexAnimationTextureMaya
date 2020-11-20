@@ -1,16 +1,12 @@
 # VertexAnimationTextureMaya
 頂点アニメーションをテクスチャにベイクするMayaプラグインです。
 
-## インストール
+## 起動方法その１
 1.Download後に解凍します。  
-2.Documents/Maya/Scriptsフォルダに解凍したフォルダを配置します。  
-3.Mayaを開き、スクリプトエディタにて以下のpythonコマンドを実行します。
-```
-import maya.cmds as cmds
-cmds.VertexAnimationTexture()
-```
+2.Mayaを起動し、ウィンドウ→設定/プリファレンスよりプラグインマネージャを開きます。
+3.【参照】をからVertexAnimationTexture.pyを選択し、ロードします。
 
-## インストールせず使用する
+## 起動方法その２
 スクリプトエディタの ファイル→スクリプトを開く から、
 VertexAnimationTextureMainWindow.pyを選択し実行します。
 
