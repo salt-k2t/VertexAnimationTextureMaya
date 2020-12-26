@@ -27,7 +27,7 @@ class VertexAnimationTextureMainWindow(MayaQWidgetBaseMixin, QtWidgets.QMainWind
 
     def _create_ui(self):
         self.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Maximum)
-        self.setFixedSize(QtCore.QSize(400, 210))
+        self.setFixedSize(QtCore.QSize(400, 260))
         self.root_widget = QtWidgets.QFrame(self)
         self.root_widget.setObjectName("root")
         self.setCentralWidget(self.root_widget)
@@ -85,11 +85,16 @@ class VertexAnimationTextureMainWindow(MayaQWidgetBaseMixin, QtWidgets.QMainWind
         self.update_button.clicked.connect(self._on_update_button_clicked)
         main_layout.addWidget(self.update_button)
 
-        self.execute_button = QtWidgets.QPushButton("execute")
-        self.execute_button.setStyleSheet("background-color: darkCyan")
-        self.execute_button.setEnabled(False)
-        self.execute_button.clicked.connect(self._on_execute_button_clicked)
-        main_layout.addWidget(self.execute_button)
+        self.execute_vid_uv_button = QtWidgets.QPushButton("execute_vid_to_uv2")
+        self.execute_vid_uv_button.setStyleSheet("background-color: darkCyan")
+        self.execute_vid_uv_button.clicked.connect(self._on_execute_vid_uv_button_clicked)
+        main_layout.addWidget(self.execute_vid_uv_button)
+
+        self.execute_bake_button = QtWidgets.QPushButton("execute_bake")
+        self.execute_bake_button.setStyleSheet("background-color: darkCyan")
+        self.execute_bake_button.setEnabled(False)
+        self.execute_bake_button.clicked.connect(self._on_execute_bake_button_clicked)
+        main_layout.addWidget(self.execute_bake_button)
 
         self.show()
         self._initialize()
@@ -131,14 +136,34 @@ class VertexAnimationTextureMainWindow(MayaQWidgetBaseMixin, QtWidgets.QMainWind
         )[0]
         if not file_path:
             return
-        self.execute_button.setEnabled(True)
+        self.execute_bake_button.setEnabled(True)
         self.tex_file_path_line.setText(file_path)
 
     def _on_update_button_clicked(self):
         self._initialize()
         self._update()
 
-    def _on_execute_button_clicked(self):
+    def _on_execute_vid_uv_button_clicked(self):
+        self._update()
+        vid_uv_name = "vid"
+
+        obj = self.costume_menu.currentText()
+        if not obj:
+            return  # ToDo
+        cmds.select(obj)
+        uvs = cmds.polyUVSet(query=True, allUVSets=True)
+        print(uvs)
+        if vid_uv_name not in uvs:
+            cmds.polyUVSet(copy=True, nuv=vid_uv_name, uvSet=uvs[0])
+        cmds.polyUVSet(currentUVSet=True, uvSet=vid_uv_name)
+
+        vertex_size = cmds.polyEvaluate(obj, v=True)
+        for v in range(vertex_size):
+            cmds.select(obj + ".vtx[" + str(v) + "]")
+            u_pos = float(v) / vertex_size
+            cmds.polyEditUV(u=u_pos, v=0, r=False)
+
+    def _on_execute_bake_button_clicked(self):
         self._update()
 
         for face in cmds.ls(self.costume_menu.currentText() + ".f[*]", fl=1):
