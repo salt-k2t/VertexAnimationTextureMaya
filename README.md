@@ -1,14 +1,20 @@
 # VertexAnimationTextureMaya
 頂点アニメーションをテクスチャにベイクするMayaプラグインです。
 
-## 起動方法その１
-1.Download後に解凍します。  
-2.Mayaを起動し、ウィンドウ→設定/プリファレンスよりプラグインマネージャを開きます。  
-3.【参照】をからVertexAnimationTexture.pyを選択し、ロードします。
+## インストール
+### modファイルの編集
+"VertexAnimationTextureMaya.mod" ファイルを開き、"PATH_TO_PLUGIN_FOLDER" の箇所を各環境に合わせて編集します。<br>
+> ex)<br>
+> \+ PLATFORM:mac VertexAnimationTextureMaya 1.1 /Users/salt-k2t/maya_plugin/VertexAnimationTextureMaya<br>
 
-## 起動方法その２
-スクリプトエディタの ファイル→スクリプトを開く から、
-VertexAnimationTextureMainWindow.pyを選択し実行します。
+### modファイルの移動
+"VertexAnimationTextureMaya.mod" ファイルを "modules" ディレクトリ以下に配置します。
+> ex)<br>
+> /Users/salt-k2t/Library/Preferences/Autodesk/maya/2019/modules/VertexAnimationTextureMaya.mod
+
+## 起動
+メニューバー→VertexAnimationTexture→OpenWindow
+より本ツールのウィンドウを開きます。
 
 ## 使い方
 1.ドロップダウンメニューから、ベイクするMeshを選択します。  
@@ -28,6 +34,7 @@ detailスライダーにて適切なベイク精度を設定する必要があ�
 |-----------|------------|------------|
 | ![ベイク画像サンプル](./samples/texture/VatSampleHightDetailPopup.png) | ![ベイク画像サンプル](./samples/texture/VatSample.png) | ![ベイク画像低精度サンプル](./samples/texture/VatSampleLowDetail.png) |
 
-## 実行環境
+## Unity実行環境
 以下のリポジトリにサンプルを用意しています。  
-https://github.com/salt-k2t/VertexAnimationTextureUnity
+https://github.com/salt-k2t/VertexAnimationTextureUnity  
+https://github.com/salt-k2t/VertexAnimationTextureUnityShaderGraph
