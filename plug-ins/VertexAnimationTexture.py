@@ -10,9 +10,9 @@ _DETAIL_SLIDER_DEFAULT = 3
 _DETAIL_SLIDER_MAX = 5
 
 
-class VertexAnimationTextureMainWindow(MayaQWidgetBaseMixin, QtWidgets.QMainWindow):
+class VertexAnimationTexture(MayaQWidgetBaseMixin, QtWidgets.QMainWindow):
     def __init__(self, parent=None):
-        super(VertexAnimationTextureMainWindow, self).__init__(parent=parent)
+        super(VertexAnimationTexture, self).__init__(parent=parent)
         self.obj_name = self.__class__.__name__ + "_window"
 
         if cmds.window(self.obj_name, q=True, ex=True):
@@ -26,7 +26,8 @@ class VertexAnimationTextureMainWindow(MayaQWidgetBaseMixin, QtWidgets.QMainWind
         self._create_ui()
 
     def _create_ui(self):
-        self.setSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Maximum)
+        self.setSizePolicy(QtWidgets.QSizePolicy.Expanding,
+                           QtWidgets.QSizePolicy.Maximum)
         self.setFixedSize(QtCore.QSize(400, 210))
         self.root_widget = QtWidgets.QFrame(self)
         self.root_widget.setObjectName("root")
@@ -52,7 +53,8 @@ class VertexAnimationTextureMainWindow(MayaQWidgetBaseMixin, QtWidgets.QMainWind
         self.detail_slider.setValue(_DETAIL_SLIDER_DEFAULT)
         self.detail_slider.setMinimum(_DETAIL_SLIDER_MIN)
         self.detail_slider.setMaximum(_DETAIL_SLIDER_MAX)
-        self.detail_slider.valueChanged.connect(self._on_change_detail_slider_value)
+        self.detail_slider.valueChanged.connect(
+            self._on_change_detail_slider_value)
         detail_layout.addWidget(self.detail_slider)
         gridLayout.addLayout(detail_layout, grid_row_index, 1)
 
@@ -72,12 +74,14 @@ class VertexAnimationTextureMainWindow(MayaQWidgetBaseMixin, QtWidgets.QMainWind
         gridLayout.addWidget(self.tex_label, grid_row_index, 1)
 
         grid_row_index += 1
-        gridLayout.addWidget(QtWidgets.QLabel("result tex path"), grid_row_index, 0)
+        gridLayout.addWidget(QtWidgets.QLabel(
+            "result tex path"), grid_row_index, 0)
         tex_path_layout = QtWidgets.QHBoxLayout()
         self.tex_file_path_line = QtWidgets.QLineEdit()
         tex_path_layout.addWidget(self.tex_file_path_line)
         self.tex_file_select_dialog_button = QtWidgets.QPushButton("…")
-        self.tex_file_select_dialog_button.clicked.connect(self._on_select_folder)
+        self.tex_file_select_dialog_button.clicked.connect(
+            self._on_select_folder)
         tex_path_layout.addWidget(self.tex_file_select_dialog_button)
         gridLayout.addLayout(tex_path_layout, grid_row_index, 1)
 
@@ -108,16 +112,19 @@ class VertexAnimationTextureMainWindow(MayaQWidgetBaseMixin, QtWidgets.QMainWind
         self.start_time = cmds.playbackOptions(q=True, min=True)
         self.end_time = cmds.playbackOptions(q=True, max=True)
         self.bake_time = self.end_time - self.start_time + 1  # Including the last time
-        self.time_label.setText(str(self.start_time) + " ~ " + str(self.end_time))
+        self.time_label.setText(str(self.start_time) +
+                                " ~ " + str(self.end_time))
 
         if cmds.objExists(self.costume_menu.currentText()):
-            self.vertex_size = cmds.polyEvaluate(self.costume_menu.currentText(), v=True)
+            self.vertex_size = cmds.polyEvaluate(
+                self.costume_menu.currentText(), v=True)
             self.vertex_label.setText(str(self.vertex_size))
             square_size = 2
             while square_size < self.vertex_size:
                 square_size *= 2
             self.vertex_size = square_size
-            self.tex_label.setText(str(self.vertex_size) + " * " + str(self.bake_time))
+            self.tex_label.setText(
+                str(self.vertex_size) + " * " + str(self.bake_time))
 
     def _on_change_detail_slider_value(self):
         value = self.detail_slider.value()
@@ -142,7 +149,8 @@ class VertexAnimationTextureMainWindow(MayaQWidgetBaseMixin, QtWidgets.QMainWind
         self._update()
 
         for face in cmds.ls(self.costume_menu.currentText() + ".f[*]", fl=1):
-            result = cmds.polyInfo(face, faceToVertex=True)[0].split(":")[1].split("    ")
+            result = cmds.polyInfo(face, faceToVertex=True)[
+                0].split(":")[1].split("    ")
             v_count = len(result) - 1
             if v_count >= 4:
                 cmds.confirmDialog(t="Warning", m="Please Triangulate")
@@ -152,7 +160,8 @@ class VertexAnimationTextureMainWindow(MayaQWidgetBaseMixin, QtWidgets.QMainWind
 
         current_time = self.start_time
         bias = 10 ** self.detail_slider.value()
-        vertex_size = cmds.polyEvaluate(self.costume_menu.currentText(), v=True)
+        vertex_size = cmds.polyEvaluate(
+            self.costume_menu.currentText(), v=True)
 
         out_of_range = False
         while (current_time <= self.end_time):
@@ -166,7 +175,8 @@ class VertexAnimationTextureMainWindow(MayaQWidgetBaseMixin, QtWidgets.QMainWind
             cmds.confirmDialog(t="Warning", m="Out of range, down the detail")
 
     def _create_data_img(self, v_size, u_size):
-        img = QtGui.QImage(v_size, u_size, QtGui.QImage.Format_ARGB32)  # Maya2019 can't use Format_RGBA64
+        # Maya2019 can't use Format_RGBA64
+        img = QtGui.QImage(v_size, u_size, QtGui.QImage.Format_ARGB32)
         img.fill(0)
         return img
 
@@ -187,9 +197,6 @@ class VertexAnimationTextureMainWindow(MayaQWidgetBaseMixin, QtWidgets.QMainWind
                 out_of_range = True
                 b = max(min(b, _MAX_SIZE_64), 0)
 
-            img.setPixelColor(v, time, QtGui.QColor.fromRgba64(r, g, b, _MAX_SIZE_64))
+            img.setPixelColor(
+                v, time, QtGui.QColor.fromRgba64(r, g, b, _MAX_SIZE_64))
         return out_of_range
-
-
-# Simple open from script editor
-VertexAnimationTextureMainWindow()
