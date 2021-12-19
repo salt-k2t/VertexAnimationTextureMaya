@@ -38,5 +38,5 @@ https://github.com/salt-k2t/VertexAnimationTextureUnity
 https://github.com/salt-k2t/VertexAnimationTextureUnityShaderGraph
 
 # Reference
-https://github.com/salt-k2t/maya_module_plugin_sample
+https://github.com/salt-k2t/maya_module_plugin_sample  
 https://github.com/robertjoosten/maya-module-installer
