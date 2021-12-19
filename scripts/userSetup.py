@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import sys
 import maya.utils
+import maya.cmds as cmds
 import VertexAnimationTexture as Vat
 
 

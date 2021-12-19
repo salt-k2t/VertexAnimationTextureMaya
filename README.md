@@ -2,15 +2,13 @@
 頂点アニメーションをテクスチャにベイクするMayaプラグインです。
 
 ## インストール
-### modファイルの編集
-"VertexAnimationTextureMaya.mod" ファイルを開き、"PATH_TO_PLUGIN_FOLDER" の箇所を各環境に合わせて編集します。<br>
-> ex)<br>
-> \+ PLATFORM:mac VertexAnimationTextureMaya 1.1 /Users/salt-k2t/maya_plugin/VertexAnimationTextureMaya<br>
+### DragAndDrop
+"VertexAnimationTextureMaya.mel" ファイルをMayaのウィンドウにドラッグアンドドロップします。<br>
+> Drag and drop "maya_module_plugin_sample.mel" into the maya window
 
 ### modファイルの移動
-"VertexAnimationTextureMaya.mod" ファイルを "modules" ディレクトリ以下に配置します。
-> ex)<br>
-> /Users/salt-k2t/Library/Preferences/Autodesk/maya/2019/modules/VertexAnimationTextureMaya.mod
+Mayaを再起動してください。
+> RestartMaya:Implementing so that it can be installed without rebooting...
 
 ## 起動
 メニューバー→VertexAnimationTexture→OpenWindow
@@ -38,3 +36,7 @@ detailスライダーにて適切なベイク精度を設定する必要があ�
 以下のリポジトリにサンプルを用意しています。  
 https://github.com/salt-k2t/VertexAnimationTextureUnity  
 https://github.com/salt-k2t/VertexAnimationTextureUnityShaderGraph
+
+# Reference
+https://github.com/salt-k2t/maya_module_plugin_sample
+https://github.com/robertjoosten/maya-module-installer
